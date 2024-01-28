@@ -4,11 +4,11 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
     <servlet>
-        <servlet-name>IndexJsp</servlet-name>
+        <servlet-name>IndexServlet</servlet-name>
         <jsp-file>/index.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
-        <servlet-name>IndexJsp</servlet-name>
+        <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -2,11 +2,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>That is the index JSP file</title>
+<title>First (index) page</title>
 </head>
 <body>
-<h1><%= "That is the index JSP file (main page), surprise!" %>
-</h1>
-<br/>
+    <h1><%= "This is main page" %></h1>
 </body>
 </html>
