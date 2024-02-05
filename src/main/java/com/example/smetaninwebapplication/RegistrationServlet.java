@@ -5,17 +5,15 @@ import com.example.smetaninwebapplication.registration.model.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
 @WebServlet("/register")
-public class UserServlet extends HttpServlet {
+public class RegistrationServlet extends HttpServlet {
     private final UserDao userDao = new UserDao();
 
-    public UserServlet() {
+    public RegistrationServlet() {
         super();
     }
 
@@ -39,6 +37,13 @@ public class UserServlet extends HttpServlet {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+
+        Cookie cookie = new Cookie("user_id", name);
+        cookie.setMaxAge(7*24*60*60);
+        response.addCookie(cookie);
+
+//        HttpSession session = request.getSession();
+//        session.setAttribute("name", name);
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("welcome.jsp");
         requestDispatcher.forward(request, response);
