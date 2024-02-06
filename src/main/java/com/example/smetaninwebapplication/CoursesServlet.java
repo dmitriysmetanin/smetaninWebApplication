@@ -21,9 +21,9 @@ public class CoursesServlet extends HttpServlet {
         response.setContentType("text/html");
         HttpSession session = request.getSession();
 
-        String user_name = (String) session.getAttribute("user_name");
+        String user_name = (String) session.getAttribute("user_id");
         if (user_name == null){
-            response.sendRedirect("/register");
+            response.sendRedirect("/login");
         }
         else {
             RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/courses.jsp");
