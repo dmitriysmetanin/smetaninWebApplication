@@ -35,7 +35,11 @@ public class LoginServlet extends HttpServlet {
             if (user.login() == 1){
                 HttpSession session = request.getSession();
                 int user_id = user.getId();
-                session.setAttribute("user_id", String.valueOf(user_id));
+//                session.setAttribute("user_id", String.valueOf(user_id));
+                
+                Cookie cookie = new Cookie("user_id",String.valueOf(user_id));
+                cookie.setMaxAge(7*24*60*60);
+                response.addCookie(cookie);
 //                response.sendRedirect("/");
 
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/index.jsp");
