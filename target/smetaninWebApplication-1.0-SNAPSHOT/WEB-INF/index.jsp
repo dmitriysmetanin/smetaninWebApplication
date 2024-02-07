@@ -1,14 +1,24 @@
+<%@ page import="com.example.smetaninwebapplication.studying.model.Course" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.io.PrintWriter" %>
+<%@ page import="com.example.smetaninwebapplication.registration.model.User" %>
+<%@ page import="com.example.smetaninwebapplication.registration.dao.UserDao" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-<title>First (index) page</title>
+<title>S-COURSES</title>
 </head>
 <body>
 <header style="display: flex; flex-direction: row;">
     <div class="header column">
         <button>
-            <a href="${pageContext.request.contextPath}/courses">Курсы</a>
+            <a href="${pageContext.request.contextPath}/">Каталог</a>
+        </button>
+    </div>
+    <div class="header column">
+        <button>
+            <a href="${pageContext.request.contextPath}/courses">Мои курсы</a>
         </button>
     </div>
     <div class="header column">
@@ -21,7 +31,45 @@
             <a href="${pageContext.request.contextPath}/profile">Профиль</a>
         </button>
     </div>
+    <div class="header column">
+        <button>
+            <a href="${pageContext.request.contextPath}/profile">Профиль</a>
+        </button>
+    </div>
 </header>
+
+<p>index page content here</p>
+
+<%
+    PrintWriter pw = new PrintWriter(response.getWriter());
+    Cookie[] list = request.getCookies();
+    if(list != null){
+        for (Cookie cookie : list) {
+            pw.println(cookie.getName() + ":" + cookie.getPath());
+        }
+    } else {
+        pw.println("cookie is empty");
+    }
+%>
+
+<%
+    ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
+    UserDao userDao = new UserDao();
+    for (Course course: courses) {%>
+        <div style="border: 1px solid black;">
+            <div>
+                <span><%= course.getName() %></span>
+            </div>
+            <div>
+                <span>Описание: </span>
+                <span><%= course.getDescription() %></span>
+            </div>
+            <div>
+                <span>Автор: </span>
+                <span><%= userDao.getNameById(course.getAuthorId()) %></span>
+            </div>
+        </div>
+<% } %>
 
 <footer style="display: flex; flex-direction: row; position: absolute; bottom: 0;">
     <div class="footer column" style="display: flex; flex-direction: column">
