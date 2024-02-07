@@ -1,15 +1,82 @@
 package com.example.smetaninwebapplication.registration.dao;
 
 import com.example.smetaninwebapplication.registration.model.User;
+import jakarta.servlet.http.Cookie;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import javax.swing.*;
+import java.io.PrintWriter;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.Properties;
 
 public class UserDao {
+
+    public String getNameById(int id) throws ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+        String GET_USER_NAME = String.format("select name from users where (id = %s) LIMIT 1;", id);
+        String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
+        Properties props = new Properties();
+        props.setProperty("user", "postgres");
+        props.setProperty("password", "root");
+        props.setProperty("ssl", "false");
+
+        try (Connection conn = DriverManager.getConnection(url, props);
+             PreparedStatement preparedStatement = conn.prepareStatement(GET_USER_NAME,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
+            ResultSet rs = preparedStatement.executeQuery();
+            rs.first();
+            return rs.getString("name");
+            } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public int getId(User user) throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        String SELECT_USER = String.format("SELECT id FROM users WHERE (email = '%s') and (pass = '%s') limit 1;", user.getEmail(), user.getPass());
+        String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
+        Properties props = new Properties();
+        props.setProperty("user", "postgres");
+        props.setProperty("password", "root");
+        props.setProperty("ssl", "false");
+
+        try (Connection conn = DriverManager.getConnection(url, props);
+             PreparedStatement preparedStatement = conn.prepareStatement(SELECT_USER,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
+            ResultSet rs = preparedStatement.executeQuery();
+            rs.first();
+            return rs.getInt(1);
+        }
+    }
+
+        public int login(User user) throws ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+        String SELECT_USER = String.format("SELECT count(name) as count FROM users WHERE (email = '%s') and (pass = '%s') group by name;", user.getEmail(), user.getPass());
+        String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
+
+        Properties props = new Properties();
+        props.setProperty("user", "postgres");
+        props.setProperty("password", "root");
+        props.setProperty("ssl", "false");
+
+        try (Connection conn = DriverManager.getConnection(url, props);
+             PreparedStatement preparedStatement = conn.prepareStatement(SELECT_USER,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
+            ResultSet rs = preparedStatement.executeQuery();
+            rs.first();
+            int users_count = rs.getInt(1);
+
+            if (users_count == 1) {
+                return 1;
+            } else {
+                return 0;
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getStackTrace());
+        }
+        return 0;
+    }
+
     public int registerUser(User user) throws ClassNotFoundException {
         int result = 0;
         Class.forName("org.postgresql.Driver");
