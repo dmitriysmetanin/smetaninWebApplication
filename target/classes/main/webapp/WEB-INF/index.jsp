@@ -3,6 +3,7 @@
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="com.example.smetaninwebapplication.registration.model.User" %>
 <%@ page import="com.example.smetaninwebapplication.registration.dao.UserDao" %>
+<%@ page import="java.util.Objects" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -42,20 +43,28 @@
 
 <%
     PrintWriter pw = new PrintWriter(response.getWriter());
-    Cookie[] list = request.getCookies();
-    if(list != null){
-        for (Cookie cookie : list) {
-            pw.println(cookie.getName() + ":" + cookie.getPath());
+    Cookie[] cookies = request.getCookies();
+    Integer user_id = 0;
+    if(cookies != null){
+        for (Cookie cookie: cookies){
+            pw.println(cookie.getValue());
+            if (Objects.equals(cookie.getName(), "user_id")) {
+                user_id = Integer.valueOf(cookie.getValue());
+
+            };
+
         }
     } else {
         pw.println("cookie is empty");
     }
-%>
 
-<%
+    pw.println(user_id);
+
     ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
     UserDao userDao = new UserDao();
-    for (Course course: courses) {%>
+    for (Course course: courses) {
+        if (!request.getAttribute("user_id").equals(course.getAuthorId())){
+        %>
         <div style="border: 1px solid black;">
             <div>
                 <span><%= course.getName() %></span>
@@ -67,9 +76,11 @@
             <div>
                 <span>Автор: </span>
                 <span><%= userDao.getNameById(course.getAuthorId()) %></span>
+
+
             </div>
         </div>
-<% } %>
+<% }} %>
 
 <footer style="display: flex; flex-direction: row; position: absolute; bottom: 0;">
     <div class="footer column" style="display: flex; flex-direction: column">

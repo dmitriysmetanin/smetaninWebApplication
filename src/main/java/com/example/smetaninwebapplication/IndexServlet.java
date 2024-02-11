@@ -36,6 +36,12 @@ public class IndexServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
+        Integer user_id = 0;
+        for (Cookie cookie: cookies){
+            if (cookie.getName().equals("user_id")) {user_id = Integer.valueOf(cookie.getValue());}
+        }
+       request.setAttribute("user_id", user_id);
+
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/index.jsp");
         requestDispatcher.forward(request, response);
     }
