@@ -1,10 +1,10 @@
-<%@ page import="com.example.smetaninwebapplication.studying.model.Course" %>
+<%@ page import="models.Course" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.io.PrintWriter" %>
-<%@ page import="com.example.smetaninwebapplication.registration.model.User" %>
-<%@ page import="com.example.smetaninwebapplication.registration.dao.UserDao" %>
+<%@ page import="models.User" %>
+<%@ page import="dao.UserDao" %>
 <%@ page import="java.util.Objects" %>
-<%@ page import="com.example.smetaninwebapplication.studying.dao.CourseDao" %>
+<%@ page import="dao.CourseDao" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -40,9 +40,9 @@
     </div>
 </header>
 
-<p>index page content here</p>
-
 <%
+    UserDao userDao = new UserDao();
+    CourseDao courseDao = new CourseDao();
     PrintWriter pw = new PrintWriter(response.getWriter());
     Cookie[] cookies = request.getCookies();
     Integer user_id = 0;
@@ -51,42 +51,44 @@
             pw.println(cookie.getValue());
             if (Objects.equals(cookie.getName(), "user_id")) {
                 user_id = Integer.valueOf(cookie.getValue());
-
             };
-
         }
-    } else {
-        pw.println("cookie is empty");
     }
-
-    pw.println(user_id);
-
     ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
-    UserDao userDao = new UserDao();
-    CourseDao courseDao = new CourseDao();
+
+    User user = userDao.getById(user_id);
+
     for (Course course: courses) {
         if (!request.getAttribute("user_id").equals(course.getAuthorId())){
-        %>
-        <div style="border: 1px solid black;">
-            <div>
-                <span><%= course.getName() %></span>
-            </div>
-            <div>
-                <span>Описание: </span>
-                <span><%= course.getDescription() %></span>
-            </div>
-            <div>
-                <span>Автор: </span>
-                <span><%= userDao.getNameById(course.getAuthorId()) %></span>
-            </div>
-            <div>
-                <form action="${pageContext.request.contextPath}/IndexServlet" method="post">
-                    <input name="courseToAddId" hidden="hidden" value="<%=course.getId()%>"/>
-                    <input type="submit" value="Подписаться" />
-                </form>
+            System.out.println(user.isStudentOf(course));%>
+
+            <div style="border: 1px solid black;">
+                <div>
+                    <span><%= course.getName() %></span>
+                </div>
+                <div>
+                    <span>Описание: </span>
+                    <span><%= course.getDescription() %></span>
+                </div>
+                <div>
+                    <span>Автор: </span>
+                    <span><%= userDao.getNameById(course.getAuthorId()) %></span>
+                </div>
+
+                <% if (!user.isStudentOf(course)){%>
+                <div>
+                    <form action="${pageContext.request.contextPath}/IndexServlet" method="post">
+                        <input name="courseToAddId" hidden="hidden" value="<%=course.getId()%>"/>
+                        <input type="submit" value="Подписаться" />
+                    </form>
+                </div>
+                <%} else {%>
+                <div>
+                    <span>Вы подписаны на курс!</span>
+                </div>
+                <%}%>
 
             </div>
-        </div>
 <% }} %>
 
 <footer style="display: flex; flex-direction: row; position: absolute; bottom: 0;">
