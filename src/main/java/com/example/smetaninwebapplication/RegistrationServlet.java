@@ -1,13 +1,14 @@
 package com.example.smetaninwebapplication;
 
-import com.example.smetaninwebapplication.registration.dao.UserDao;
-import com.example.smetaninwebapplication.registration.model.User;
+import dao.UserDao;
+import models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/register")
 public class RegistrationServlet extends HttpServlet {
@@ -18,7 +19,7 @@ public class RegistrationServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/register.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/register.jsp");
         requestDispatcher.forward(request, response);
     }
 
@@ -38,15 +39,18 @@ public class RegistrationServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        Cookie cookie = new Cookie("user_id", name);
+        Cookie cookie = null;
+        try {
+            cookie = new Cookie("user_id", Integer.toString(user.getId()));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         cookie.setMaxAge(7*24*60*60);
         response.addCookie(cookie);
+        response.sendRedirect("/");
 
-//        HttpSession session = request.getSession();
-//        session.setAttribute("name", name);
-
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("welcome.jsp");
-        requestDispatcher.forward(request, response);
     }
 
 }

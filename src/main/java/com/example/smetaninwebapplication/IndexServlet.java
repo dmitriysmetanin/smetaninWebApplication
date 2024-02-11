@@ -4,10 +4,10 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.example.smetaninwebapplication.registration.dao.UserDao;
-import com.example.smetaninwebapplication.registration.model.User;
-import com.example.smetaninwebapplication.studying.dao.CourseDao;
-import com.example.smetaninwebapplication.studying.model.Course;
+import dao.UserDao;
+import models.User;
+import dao.CourseDao;
+import models.Course;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -69,7 +69,7 @@ public class IndexServlet extends HttpServlet {
             }
         }
 
-        RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/index.jsp");
+        RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/index.jsp");
         requestDispatcher.forward(request, response);
     }
 

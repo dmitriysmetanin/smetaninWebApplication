@@ -1,7 +1,7 @@
 package com.example.smetaninwebapplication;
 
-import com.example.smetaninwebapplication.registration.dao.UserDao;
-import com.example.smetaninwebapplication.registration.model.User;
+import dao.UserDao;
+import models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,14 +35,11 @@ public class LoginServlet extends HttpServlet {
             if (user.login() == 1){
                 HttpSession session = request.getSession();
                 int user_id = user.getId();
-//                session.setAttribute("user_id", String.valueOf(user_id));
-                
                 Cookie cookie = new Cookie("user_id",String.valueOf(user_id));
                 cookie.setMaxAge(7*24*60*60);
                 response.addCookie(cookie);
-//                response.sendRedirect("/");
 
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/index.jsp");
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/index.jsp");
                 requestDispatcher.forward(request, response);
             }
         } catch (ClassNotFoundException e) {
