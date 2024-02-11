@@ -1,6 +1,7 @@
 package com.example.smetaninwebapplication.registration.dao;
 
 import com.example.smetaninwebapplication.registration.model.User;
+import com.example.smetaninwebapplication.studying.model.Course;
 import jakarta.servlet.http.Cookie;
 
 import javax.swing.*;
@@ -10,6 +11,48 @@ import java.util.Arrays;
 import java.util.Properties;
 
 public class UserDao {
+
+    public User getById(Integer id) throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        String SELECT_COURSE = String.format("select * from users where (id = %s) LIMIT 1;", id);
+        String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
+        Properties props = new Properties();
+        props.setProperty("user", "postgres");
+        props.setProperty("password", "root");
+        props.setProperty("ssl", "false");
+
+        try (Connection conn = DriverManager.getConnection(url, props);
+             PreparedStatement preparedStatement = conn.prepareStatement(SELECT_COURSE,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
+            ResultSet rs = preparedStatement.executeQuery();
+            rs.first();
+            User user = new User();
+            user.setName(rs.getString("name"));
+            user.setEmail(rs.getString("email"));
+            user.setPass(rs.getString("pass"));
+
+            return user;
+        }
+    }
+    public Integer subscribe(Course course, User user) throws ClassNotFoundException {
+        int result = 0;
+        Class.forName("org.postgresql.Driver");
+        String INSERT_USERS = "INSERT INTO course_user (course_id, user_id) values (?, ?);";
+        String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
+        Properties props = new Properties();
+        props.setProperty("user", "postgres");
+        props.setProperty("password", "root");
+        props.setProperty("ssl", "false");
+
+        try (Connection conn = DriverManager.getConnection(url, props); PreparedStatement preparedStatement = conn.prepareStatement(INSERT_USERS)) {
+            preparedStatement.setInt(1, course.getId());
+            preparedStatement.setInt(2, user.getId());
+            result = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return result;
+    }
 
     public String getNameById(int id) throws ClassNotFoundException {
         Class.forName("org.postgresql.Driver");

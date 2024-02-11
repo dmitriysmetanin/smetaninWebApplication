@@ -4,6 +4,7 @@
 <%@ page import="com.example.smetaninwebapplication.registration.model.User" %>
 <%@ page import="com.example.smetaninwebapplication.registration.dao.UserDao" %>
 <%@ page import="java.util.Objects" %>
+<%@ page import="com.example.smetaninwebapplication.studying.dao.CourseDao" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -62,6 +63,7 @@
 
     ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
     UserDao userDao = new UserDao();
+    CourseDao courseDao = new CourseDao();
     for (Course course: courses) {
         if (!request.getAttribute("user_id").equals(course.getAuthorId())){
         %>
@@ -76,7 +78,12 @@
             <div>
                 <span>Автор: </span>
                 <span><%= userDao.getNameById(course.getAuthorId()) %></span>
-
+            </div>
+            <div>
+                <form action="${pageContext.request.contextPath}/IndexServlet" method="post">
+                    <input name="courseToAddId" hidden="hidden" value="<%=course.getId()%>"/>
+                    <input type="submit" value="Подписаться" />
+                </form>
 
             </div>
         </div>
