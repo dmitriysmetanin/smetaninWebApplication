@@ -1,5 +1,6 @@
 package models;
 
+import dao.HometaskDao;
 import dao.ModuleDao;
 
 import java.sql.SQLException;
@@ -7,8 +8,8 @@ import java.sql.SQLException;
 public class Module {
 
     public Hometask getHometask() throws SQLException, ClassNotFoundException {
-        ModuleDao moduleDao = new ModuleDao();
-        return moduleDao.getHometask(this.getId());
+        HometaskDao hometaskDao = new HometaskDao();
+        return hometaskDao.getHometaskByModuleId(this.getId());
     }
 
     private int id;
