@@ -19,7 +19,7 @@ public class UserDao {
 
         try (Connection conn = DriverManager.getConnection(url, props);
              PreparedStatement preparedStatement = conn.prepareStatement(SELECT_COURSE,
-                     ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
+                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             ResultSet rs = preparedStatement.executeQuery();
             rs.first();
             User user = new User();
@@ -30,6 +30,7 @@ public class UserDao {
             return user;
         }
     }
+
     public Integer subscribe(Course course, User user) throws ClassNotFoundException {
         int result = 0;
         Class.forName("org.postgresql.Driver");
@@ -61,14 +62,15 @@ public class UserDao {
 
         try (Connection conn = DriverManager.getConnection(url, props);
              PreparedStatement preparedStatement = conn.prepareStatement(GET_USER_NAME,
-                     ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
+                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             ResultSet rs = preparedStatement.executeQuery();
             rs.first();
             return rs.getString("name");
-            } catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
     public int getId(User user) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         String SELECT_USER = String.format("SELECT id FROM users WHERE (email = '%s') and (pass = '%s') limit 1;", user.getEmail(), user.getPass());
@@ -80,14 +82,14 @@ public class UserDao {
 
         try (Connection conn = DriverManager.getConnection(url, props);
              PreparedStatement preparedStatement = conn.prepareStatement(SELECT_USER,
-                     ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
+                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             ResultSet rs = preparedStatement.executeQuery();
             rs.first();
             return rs.getInt(1);
         }
     }
 
-        public int login(User user) throws ClassNotFoundException {
+    public int login(User user) throws ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         String SELECT_USER = String.format("SELECT count(name) as count FROM users WHERE (email = '%s') and (pass = '%s') group by name;", user.getEmail(), user.getPass());
         String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
@@ -99,7 +101,7 @@ public class UserDao {
 
         try (Connection conn = DriverManager.getConnection(url, props);
              PreparedStatement preparedStatement = conn.prepareStatement(SELECT_USER,
-                     ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
+                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             ResultSet rs = preparedStatement.executeQuery();
             rs.first();
             int row_count = rs.getRow();
