@@ -19,7 +19,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/login.jsp");
         requestDispatcher.forward(request, response);
     }
 
@@ -39,12 +39,16 @@ public class LoginServlet extends HttpServlet {
                 cookie.setMaxAge(7*24*60*60);
                 response.addCookie(cookie);
 
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/index.jsp");
-                requestDispatcher.forward(request, response);
+                response.sendRedirect("/");
+            } else {
+                response.sendRedirect("/login?redirect_after=incorrect_credentials");
             }
+
         } catch (ClassNotFoundException e) {
+            System.out.println(e.getStackTrace());
             throw new RuntimeException(e);
         } catch (SQLException e) {
+            System.out.println(e.getStackTrace());
             throw new RuntimeException(e);
         }
 

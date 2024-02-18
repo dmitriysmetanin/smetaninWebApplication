@@ -63,14 +63,19 @@ public class IndexServlet extends HttpServlet {
 
         Integer user_id = 0;
         for (Cookie cookie: cookies){
-            if (cookie.getName().equals("user_id")) {
-                user_id = Integer.valueOf(cookie.getValue());
-                request.setAttribute("user_id", user_id);
+            if (cookie != null){
+                if (cookie.getName().equals("user_id")) {
+                    user_id = Integer.valueOf(cookie.getValue());
+                    request.setAttribute("user_id", user_id);
+                }
             }
         }
-
-        RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/index.jsp");
-        requestDispatcher.forward(request, response);
+        if (request.getAttribute("user_id") ==  null) {
+            response.sendRedirect("/login");
+        } else {
+            RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/index.jsp");
+            requestDispatcher.forward(request, response);
+        }
     }
 
     public void destroy() {

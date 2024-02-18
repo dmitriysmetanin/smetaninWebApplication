@@ -1,4 +1,5 @@
-<%--
+<%@ page import="java.io.PrintWriter" %>
+<%@ page import="java.util.Objects" %><%--
   Created by IntelliJ IDEA.
   User: Dmitriy
   Date: 28.01.2024
@@ -11,6 +12,15 @@
     <title>Войти или зарегистрироваться</title>
 </head>
 <body>
+    <%
+        PrintWriter pw = response.getWriter();
+        String redirect_after = request.getParameter("redirect_after");
+        if (Objects.equals(redirect_after, "incorrect_credentials")){%>
+            <div>
+                <span>Введен неверный логин или пароль!</span>
+            </div>
+    <%}%>
+
     <form method="post" action="<%= request.getContextPath()%>/login">
         <label for="input_email">Email:</label>
         <input id="input_email" type="text" name="email" /><br/>

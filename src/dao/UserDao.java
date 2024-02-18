@@ -102,16 +102,12 @@ public class UserDao {
                      ResultSet.TYPE_SCROLL_INSENSITIVE,  ResultSet.CONCUR_READ_ONLY)) {
             ResultSet rs = preparedStatement.executeQuery();
             rs.first();
-            int users_count = rs.getInt(1);
-
-            if (users_count == 1) {
-                return 1;
-            } else {
-                return 0;
-            }
+            int row_count = rs.getRow();
+            return row_count;
 
         } catch (SQLException ex) {
-            System.out.println(ex.getStackTrace());
+            System.out.println("Ошибка в UserDao login");
+            System.out.println(ex.getMessage());
         }
         return 0;
     }
