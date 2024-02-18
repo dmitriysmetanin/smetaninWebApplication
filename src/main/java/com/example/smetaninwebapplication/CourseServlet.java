@@ -3,6 +3,7 @@ package com.example.smetaninwebapplication;
 import dao.UserDao;
 import dao.ModuleDao;
 import models.Course;
+import models.Hometask;
 import models.Module;
 import dao.CourseDao;
 import jakarta.servlet.RequestDispatcher;
@@ -37,9 +38,13 @@ public class CourseServlet extends HttpServlet {
                 if (module_id != null){
                     // Если ID Курса и Модуля корректны - переводим на страницу Модуля
                     if (moduleDao.exists(course_id, Integer.parseInt(module_id))){
-                        System.out.println("course_id & module_id are correct");
+
                         Module module = moduleDao.getById(Integer.parseInt(module_id));
                         request.setAttribute("module", module);
+//                        System.out.println(module.getName());
+                        Hometask hometask = module.getHometask();
+                        request.setAttribute("hometask", hometask);
+//                        System.out.println(hometask.getName());
                         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/module.jsp");
                         requestDispatcher.forward(request, response);
                         // Если ID Курса и Модуля НЕкорректны - выводим ошибку
