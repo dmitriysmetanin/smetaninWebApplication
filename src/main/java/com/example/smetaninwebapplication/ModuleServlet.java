@@ -1,8 +1,10 @@
 package com.example.smetaninwebapplication;
 
+import dao.HometaskDao;
 import dao.UserDao;
 import dao.CourseDao;
 import dao.ModuleDao;
+import models.Hometask;
 import models.Module;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -14,10 +16,12 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class ModuleServlet extends HttpServlet {
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         CourseDao courseDao = new CourseDao();
         UserDao userDao = new UserDao();
         ModuleDao moduleDao = new ModuleDao();
+        HometaskDao hometaskDao = new HometaskDao();
 
         int course_id = Integer.parseInt(request.getParameter("course_id"));
         int module_id = Integer.parseInt(request.getParameter("module_id"));
@@ -25,6 +29,8 @@ public class ModuleServlet extends HttpServlet {
             if (moduleDao.exists(course_id, module_id)){
                 Module module = moduleDao.getById(course_id);
                 request.setAttribute("module", module);
+                Hometask hometask = hometaskDao.getHometaskByModuleId(module.getId());
+                request.setAttribute("hometask", hometask);
             } else {
                 request.setAttribute("errorMessage", "Модуль с таким ID не существует :(");
                 RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/error.jsp");
@@ -40,6 +46,4 @@ public class ModuleServlet extends HttpServlet {
         requestDispatcher.forward(request, response);
     }
 
-    public void destroy() {
-    }
 }
