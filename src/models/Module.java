@@ -1,6 +1,15 @@
 package models;
 
+import dao.ModuleDao;
+
+import java.sql.SQLException;
+
 public class Module {
+
+    public Hometask getHometask() throws SQLException, ClassNotFoundException {
+        ModuleDao moduleDao = new ModuleDao();
+        return moduleDao.getHometask(this.getId());
+    }
 
     private int id;
     private String name;
