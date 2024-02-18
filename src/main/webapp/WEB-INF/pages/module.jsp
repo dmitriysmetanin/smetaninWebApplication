@@ -1,5 +1,6 @@
 <%@ page import="java.io.PrintWriter" %>
-<%@ page import="models.Module" %><%--
+<%@ page import="models.Module" %>
+<%@ page import="dao.ModuleDao" %><%--
   Created by IntelliJ IDEA.
   User: Dmitriy
   Date: 11.02.2024
@@ -30,6 +31,22 @@
                 <span><%=module.getContent()%></span>
             </div>
         </div>
+
+        <div>
+            <%
+                ModuleDao moduleDao = new ModuleDao();
+                PrintWriter pw = response.getWriter();
+                if (moduleDao.hometaskExists(module.getId())){
+             // Здесь получаем объект домашнего задания и выводим кнопку для перехода к нему
+                    %>
+                   <div>
+                       <button>
+                           <a href="hometask?module_id=<%=module.getId()%>">Выполнить ДЗ по теме</a>
+                       </button>
+                   </div>
+                <%}%>
+        </div>
+
     </div>
 </body>
 </html>
