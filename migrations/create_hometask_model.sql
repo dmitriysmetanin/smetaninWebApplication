@@ -6,3 +6,5 @@ create table Hometasks (
     maxPoints int default 0,
     moduleId INTEGER REFERENCES Modules (Id)
 );
+
+alter table Hometasks add constraint uniqueModuleId UNIQUE (moduleId);
