@@ -15,13 +15,21 @@
 <body>
     <%
     User user = (User) request.getAttribute("user");
-    String currentUserMode = (String) request.getAttribute("userMode");
-    String userModeToChange = "";
 
-    if (currentUserMode.equals("student")){
+    String userMode = (String) request.getAttribute("userMode");
+    String userModeToChange = "";
+    if (userMode.equals("student")){
         userModeToChange = "teacher";
-    } else if (currentUserMode.equals("teacher")){
+    } else if (userMode.equals("teacher")){
         userModeToChange = "student";
+    }
+
+    String editProfileInfoMode = (String) request.getAttribute("editProfileInfoMode");
+    String editProfileInfoModeToChange = "";
+    if (editProfileInfoMode.equals("true")){
+        editProfileInfoModeToChange = "false";
+    } else if (editProfileInfoMode.equals("false")) {
+        editProfileInfoModeToChange = "true";
     }
 
     %>
@@ -41,7 +49,7 @@
         </div>
         <div>
             <form method="post" action="<%= request.getContextPath()%>/profile">
-                <button name="editUserInfo" value="true">Edit</button>
+                <button name="editProfileInfoMode" value=<%=editProfileInfoModeToChange%>>Edit</button>
                 <button name="userModeToChange" value=<%=userModeToChange%>>Change to <%=userModeToChange%></button>
             </form>
         </div>
