@@ -16,12 +16,12 @@
 <%
     UserDao userDao = new UserDao();
     Cookie[] cookies = request.getCookies();
-    Integer user_id = 0;
+    int user_id = 0;
     String userMode = "";
     if (cookies != null) {
         for (Cookie cookie : cookies) {
             if (Objects.equals(cookie.getName(), "user_id")) {
-                user_id = Integer.valueOf(cookie.getValue());
+                user_id = Integer.parseInt(cookie.getValue());
             }
             if (Objects.equals(cookie.getName(), "userMode")) {
                 userMode = cookie.getValue();
@@ -29,7 +29,6 @@
             }
         }
     }
-    ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
     User user = userDao.getById(user_id);
 %>
 
@@ -62,41 +61,61 @@
 </header>
 
 
+<% if (userMode.equals("teacher")) {%>
+    <div>
+        <button>
+            <a href="${pageContext.request.contextPath}/author/create_course">Создать курс</a>
+        </button>
+    </div>
+    <%
+        ArrayList<Course> createdCourses = (ArrayList<Course>) request.getAttribute("createdCourses");
+        if (createdCourses != null){
+            for (Course course: createdCourses){ %>
+    <div>
+        <div>
+            <a href="${pageContext.request.contextPath}/course&course_id=<%=course.getId()%>">
+                <%=course.getName()%>
+            </a>
+        </div>
+        <div>
+            <span>Описание:</span>
+            <span><%=course.getDescription()%></span>
+        </div>
+    </div>
+    <%}}%>
 <%
+} else if (userMode.equals("student")) {
+    ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("subscribedCourses");
     for (Course course : courses) {
-        if (!request.getAttribute("user_id").equals(course.getAuthorId())) {
-            System.out.println(user.isStudentOf(course));%>
+        if (!request.getAttribute("user_id").equals(course.getAuthorId())) { %>
+            <div style="border: 1px solid black;">
+                <div>
+                    <span><%= course.getName() %></span>
+                </div>
+                <div>
+                    <span>Описание: </span>
+                    <span><%= course.getDescription() %></span>
+                </div>
+                <div>
+                    <span>Автор: </span>
+                    <span><%= userDao.getNameById(course.getAuthorId()) %></span>
+                </div>
 
-
-<div style="border: 1px solid black;">
-    <div>
-        <span><%= course.getName() %></span>
-    </div>
-    <div>
-        <span>Описание: </span>
-        <span><%= course.getDescription() %></span>
-    </div>
-    <div>
-        <span>Автор: </span>
-        <span><%= userDao.getNameById(course.getAuthorId()) %></span>
-    </div>
-
-    <% if (!user.isStudentOf(course)) {%>
-    <div>
-        <form action="${pageContext.request.contextPath}/IndexServlet" method="post">
-            <input name="courseToAddId" hidden="hidden" value="<%=course.getId()%>"/>
-            <input type="submit" value="Подписаться"/>
-        </form>
-    </div>
-    <%} else {%>
-    <div>
-        <span>Вы подписаны на курс!</span>
-    </div>
-    <%}%>
-
-</div>
-<% }
-} %>
+                <% if (!user.isStudentOf(course)) {%>
+                <div>
+                    <form action="${pageContext.request.contextPath}/IndexServlet" method="post">
+                        <input name="courseToAddId" hidden="hidden" value="<%=course.getId()%>"/>
+                        <input type="submit" value="Подписаться"/>
+                    </form>
+                </div>
+                <%} else {%>
+                <div>
+                    <span>Вы подписаны на курс!</span>
+                </div>
+                <%}%>
+            </div>
+        <%}%>
+<%}}%>
 
 <footer style="display: flex; flex-direction: row; position: absolute; bottom: 0;">
     <div class="footer column" style="display: flex; flex-direction: column">
@@ -122,14 +141,5 @@
         </div>
     </div>
 </footer>
-
-
-<%--    <h1><%= "This is main page" %></h1>--%>
-<%--    <%@ page import="services.GetDateClass" %>--%>
-
-<%--    <% GetDateClass getDate = new GetDateClass(); %>--%>
-<%--    <%=--%>
-<%--    getDate.getCurrentDate()--%>
-<%--    %>--%>
 </body>
 </html>

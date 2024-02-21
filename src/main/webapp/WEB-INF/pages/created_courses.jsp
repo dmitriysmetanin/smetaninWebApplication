@@ -12,27 +12,8 @@
     <title>Созданные курсы</title>
 </head>
 <body>
-    <div>
-        <button>
-            <a href="${pageContext.request.contextPath}/author/create_course">Создать курс</a>
-        </button>
-    </div>
 
-    <%
-        ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
-        if (courses != null){
-            for (Course course: courses){ %>
-                <div>
-                    <div>
-                        <a href="${pageContext.request.contextPath}/course&course_id=<%=course.getId()%>">
-                            <%=course.getName()%>
-                        </a>
-                    </div>
-                    <div>
-                        <span>Описание:</span>
-                        <span><%=course.getDescription()%></span>
-                    </div>
-                </div>
-                <%}}%>
+
+
 </body>
 </html>

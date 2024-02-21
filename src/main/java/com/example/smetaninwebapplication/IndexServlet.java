@@ -15,16 +15,17 @@ import jakarta.servlet.annotation.*;
 
 @WebServlet("/")
 public class IndexServlet extends HttpServlet {
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Integer courseToAddId = Integer.valueOf(request.getParameter("courseToAddId"));
         CourseDao courseDao = new CourseDao();
         UserDao userDao = new UserDao();
 
         Cookie[] cookies = request.getCookies();
-        Integer user_id = 0;
-        for (Cookie cookie: cookies){
+        int user_id = 0;
+        for (Cookie cookie : cookies) {
             if (cookie.getName().equals("user_id")) {
-                user_id = Integer.valueOf(cookie.getValue());
+                user_id = Integer.parseInt(cookie.getValue());
+                System.out.println(user_id);
                 request.setAttribute("user_id", user_id);
             }
         }
@@ -32,41 +33,48 @@ public class IndexServlet extends HttpServlet {
         try {
             Course course = courseDao.getById(courseToAddId);
             User user = userDao.getById(user_id);
-            if (course != null){
+            if (course != null) {
                 userDao.subscribe(course, user);
             }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
-    response.sendRedirect("/");
+        response.sendRedirect("/");
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setContentType("text/html");
         Cookie[] cookies = request.getCookies();
-        HttpSession session = request.getSession();
-        CourseDao courseDao = new CourseDao();
-        try {
-            ArrayList<Course> courses = courseDao.getAllCourses();
-            request.setAttribute("courses", courses);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        Integer user_id = 0;
-        for (Cookie cookie: cookies){
-            if (cookie != null){
-                if (cookie.getName().equals("user_id")) {
-                    user_id = Integer.valueOf(cookie.getValue());
-                    request.setAttribute("user_id", user_id);
+        UserDao userDao = new UserDao();
+        for (Cookie cookie : cookies) {
+            if (cookie != null) {
+                switch (cookie.getName()) {
+                    case ("user_id"):
+                        request.setAttribute("user_id", Integer.valueOf(cookie.getValue()));
+                        break;
+                    case ("userMode"):
+                        request.setAttribute("userMode", cookie.getValue());
+                    case ("editProfileInfoMode"):
+                        request.setAttribute("editProfileInfoMode", cookie.getValue());
                 }
             }
         }
-        if (request.getAttribute("user_id") ==  null) {
+
+        if (request.getAttribute("user_id") == null) {
             response.sendRedirect("/login");
         } else {
+            if (request.getAttribute("userMode").equals("student")) {
+                try {
+                    User user = userDao.getById((Integer) request.getAttribute("user_id"));
+                    ArrayList<Course> subscribedCourses = user.getSubscribedCourses();
+                    request.setAttribute("subscribedCourses", subscribedCourses);
+                } catch (ClassNotFoundException | SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (request.getAttribute("userMode").equals("teacher")) {
+                ArrayList<Course> createdCourses = new ArrayList<>();
+                request.setAttribute("createdCourses", createdCourses);
+            }
+
             RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/index.jsp");
             requestDispatcher.forward(request, response);
         }

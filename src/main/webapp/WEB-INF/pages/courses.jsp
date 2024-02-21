@@ -24,7 +24,7 @@
             }
             if (Objects.equals(cookie.getName(), "userMode")) {
                 userMode = cookie.getValue();
-                System.out.println(userMode);
+//                System.out.println(userMode);
             }
         }
     }

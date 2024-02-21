@@ -23,14 +23,14 @@ public class ProfileServlet extends HttpServlet {
         if (editProfileInfoMode != null) {
             switch (editProfileInfoMode) {
                 case ("true"):
-                    System.out.println(editProfileInfoMode);
+                    // System.out.println(editProfileInfoMode);
                     Cookie cookie = new Cookie("editProfileInfoMode", "true");
                     cookie.setMaxAge(7 * 24 * 60 * 60);
                     response.addCookie(cookie);
                     response.sendRedirect("/profile");
                     break;
                 case ("false"):
-                    System.out.println(editProfileInfoMode);
+                    // System.out.println(editProfileInfoMode);
                     cookie = new Cookie("editProfileInfoMode", "false");
                     cookie.setMaxAge(7 * 24 * 60 * 60);
                     response.addCookie(cookie);
@@ -63,13 +63,13 @@ public class ProfileServlet extends HttpServlet {
         UserDao userDao = new UserDao();
         Cookie[] cookies = request.getCookies();
 
-        Integer user_id = 0;
+        int user_id = 0;
         String userMode = "";
         String editProfileInfoMode = "";
         for (Cookie cookie : cookies) {
             if (cookie != null) {
                 if (cookie.getName().equals("user_id")) {
-                    user_id = Integer.valueOf(cookie.getValue());
+                    user_id = Integer.parseInt(cookie.getValue());
                     request.setAttribute("user_id", user_id);
                 } else if (cookie.getName().equals("userMode")) {
                     userMode = cookie.getValue();
@@ -92,11 +92,7 @@ public class ProfileServlet extends HttpServlet {
                 response.sendRedirect("/error?errorMessage=Пользователь с таким ID не найден :(");
             }
 
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ServletException e) {
+        } catch (ClassNotFoundException | ServletException | SQLException e) {
             throw new RuntimeException(e);
         }
     }

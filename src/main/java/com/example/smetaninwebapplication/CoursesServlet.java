@@ -35,13 +35,11 @@ public class CoursesServlet extends HttpServlet {
             User user = userDao.getById(user_id);
             ArrayList<Course> courses = user.getSubscribedCourses();
             request.setAttribute("courses", courses);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-    RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/courses.jsp");
+        RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/courses.jsp");
     requestDispatcher.forward(request, response);
     }
 
