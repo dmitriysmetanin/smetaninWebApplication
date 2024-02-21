@@ -35,6 +35,11 @@
     %>
     <div>
         <div>
+            <button>
+                <a href="${pageContext.request.contextPath}/">Назад</a>
+            </button>
+        </div>
+        <div>
             <span>Имя</span>
             <span><%=user.getName()%></span>
         </div>

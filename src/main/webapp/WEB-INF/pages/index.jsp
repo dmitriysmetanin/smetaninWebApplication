@@ -39,7 +39,7 @@
     %>
     <div class="header column">
         <button>
-            <a href="${pageContext.request.contextPath}/teacher_panel">Панель преподавателя</a>
+            <a href="${pageContext.request.contextPath}/created_courses">Созданные курсы</a>
         </button>
     </div>
     <%} else if (userMode.equals("student")) {%>
