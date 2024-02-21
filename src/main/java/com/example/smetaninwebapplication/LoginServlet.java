@@ -33,8 +33,11 @@ public class LoginServlet extends HttpServlet {
 
         try {
             if (user.login() == 1){
-                HttpSession session = request.getSession();
                 int user_id = user.getId();
+                Cookie cookieAuthorMode = new Cookie("userMode", "student");
+                cookieAuthorMode.setMaxAge(7 * 24 * 60 * 60);
+                response.addCookie(cookieAuthorMode);
+
                 Cookie cookie = new Cookie("user_id",String.valueOf(user_id));
                 cookie.setMaxAge(7*24*60*60);
                 response.addCookie(cookie);
@@ -51,36 +54,6 @@ public class LoginServlet extends HttpServlet {
             System.out.println(e.getStackTrace());
             throw new RuntimeException(e);
         }
-
-
-//        try {
-//            int users_count = userDao.login(user);
-//
-//            HttpSession session = request.getSession();
-//            session.setAttribute("login_result", String.valueOf(users_count));
-//            RequestDispatcher requestDispatcher2 = getServletContext().getRequestDispatcher("/WEB-INF/index.jsp");
-//            requestDispatcher2.forward(request, response);
-//
-//        } catch (ClassNotFoundException e){
-//            throw new RuntimeException(e);
-//        }
-//        user.setPass(pass);
-//
-//        try {
-//            userDao.registerUser(user);
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        Cookie cookie = new Cookie("user_id", name);
-//        cookie.setMaxAge(7*24*60*60);
-//        response.addCookie(cookie);
-
-//        HttpSession session = request.getSession();
-//        session.setAttribute("name", name);
-
-//        RequestDispatcher requestDispatcher = request.getRequestDispatcher("welcome.jsp");
-//        requestDispatcher.forward(request, response);
     }
 
 }
