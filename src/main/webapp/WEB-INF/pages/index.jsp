@@ -15,14 +15,11 @@
 
 <%
     UserDao userDao = new UserDao();
-    CourseDao courseDao = new CourseDao();
-    PrintWriter pw = new PrintWriter(response.getWriter());
     Cookie[] cookies = request.getCookies();
     Integer user_id = 0;
     String userMode = "";
     if (cookies != null) {
         for (Cookie cookie : cookies) {
-            pw.println(cookie.getValue());
             if (Objects.equals(cookie.getName(), "user_id")) {
                 user_id = Integer.valueOf(cookie.getValue());
             }
@@ -34,8 +31,8 @@
     }
     ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
     User user = userDao.getById(user_id);
-
 %>
+
 <header style="display: flex; flex-direction: row;">
     <%
         if (userMode.equals("teacher")) {
@@ -62,8 +59,9 @@
             <a href="${pageContext.request.contextPath}/profile">Профиль</a>
         </button>
     </div>
-
 </header>
+
+
 <%
     for (Course course : courses) {
         if (!request.getAttribute("user_id").equals(course.getAuthorId())) {
