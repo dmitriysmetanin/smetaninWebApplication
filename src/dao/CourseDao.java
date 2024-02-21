@@ -7,6 +7,25 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 public class CourseDao {
+    public int create(Course course) throws ClassNotFoundException, SQLException {
+        int result = 0;
+        Class.forName("org.postgresql.Driver");
+        String CREATE_COURSE = "INSERT INTO courses (name, description, authorid) values (?, ?, ?);";
+        String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
+        Properties props = new Properties();
+        props.setProperty("user", "postgres");
+        props.setProperty("password", "root");
+        props.setProperty("ssl", "false");
+
+        try (Connection conn = DriverManager.getConnection(url, props);
+             PreparedStatement preparedStatement = conn.prepareStatement(CREATE_COURSE)){
+            preparedStatement.setString(1, course.getName());
+            preparedStatement.setString(2, course.getDescription());
+            preparedStatement.setInt(3, course.getAuthorId());
+            result = preparedStatement.executeUpdate();
+        }
+        return result;
+    }
 
     public boolean exists(int id) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");

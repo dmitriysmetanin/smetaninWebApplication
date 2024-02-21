@@ -152,7 +152,8 @@ public class UserDao {
         props.setProperty("password", "root");
         props.setProperty("ssl", "false");
 
-        try (Connection conn = DriverManager.getConnection(url, props); PreparedStatement preparedStatement = conn.prepareStatement(INSERT_USERS)) {
+        try (Connection conn = DriverManager.getConnection(url, props);
+             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_USERS)) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPass());
