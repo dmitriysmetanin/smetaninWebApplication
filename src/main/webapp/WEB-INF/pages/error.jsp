@@ -15,7 +15,7 @@
     <div>
         <div>
             <h1>
-                <%=request.getAttribute("errorMessage")%>
+                <%=request.getParameter("errorMessage")%>
             </h1>
         </div>
         <img src=""
