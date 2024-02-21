@@ -64,7 +64,6 @@ public class User {
                 courses.add(course);
             }
             return courses;
-
         }
     }
 
@@ -117,4 +116,34 @@ public class User {
         this.pass = pass;
     }
 
+    public ArrayList<Course> getCreatedCourses() throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        String SELECT_SUBSCRIBED_COURSES = String.format("select * from courses where authorid = %s;", this.getId());
+        String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
+        Properties props = new Properties();
+        props.setProperty("user", "postgres");
+        props.setProperty("password", "root");
+        props.setProperty("ssl", "false");
+
+        try (Connection conn = DriverManager.getConnection(url, props);
+             PreparedStatement preparedStatement = conn.prepareStatement(SELECT_SUBSCRIBED_COURSES,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            ResultSet result = preparedStatement.executeQuery();
+            ArrayList<Course> courses = new ArrayList<>();
+            while (result.next()) {
+                Integer id = result.getInt("id");
+                String name = result.getString("name");
+                String description = result.getString("description");
+                Integer authorId = result.getInt("authorid");
+
+                Course course = new Course();
+                course.setId(id);
+                course.setName(name);
+                course.setDescription(description);
+                course.setAuthorId(authorId);
+                courses.add(course);
+            }
+            return courses;
+        }
+    }
 }
