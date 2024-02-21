@@ -11,8 +11,38 @@
 <head>
     <title>S-COURSES</title>
 </head>
+
+<%
+    UserDao userDao = new UserDao();
+    Cookie[] cookies = request.getCookies();
+    Integer user_id = 0;
+    String userMode = "";
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (Objects.equals(cookie.getName(), "user_id")) {
+                user_id = Integer.valueOf(cookie.getValue());
+            }
+            if (Objects.equals(cookie.getName(), "userMode")) {
+                userMode = cookie.getValue();
+                System.out.println(userMode);
+            }
+        }
+    }
+    ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
+    User user = userDao.getById(user_id);
+%>
+
 <body>
 <header style="display: flex; flex-direction: row;">
+    <%
+        if (userMode.equals("teacher")) {
+    %>
+    <div class="header column">
+        <button>
+            <a href="${pageContext.request.contextPath}/teacher_panel">Панель преподавателя</a>
+        </button>
+    </div>
+    <%} else if (userMode.equals("student")) {%>
     <div class="header column">
         <button>
             <a href="${pageContext.request.contextPath}/">Каталог</a>
@@ -23,16 +53,7 @@
             <a href="${pageContext.request.contextPath}/courses">Мои курсы</a>
         </button>
     </div>
-    <div class="header column">
-        <button>
-            <a href="${pageContext.request.contextPath}/stats">Статистика</a>
-        </button>
-    </div>
-    <div class="header column">
-        <button>
-            <a href="${pageContext.request.contextPath}/profile">Профиль</a>
-        </button>
-    </div>
+    <%}%>
     <div class="header column">
         <button>
             <a href="${pageContext.request.contextPath}/profile">Профиль</a>
@@ -41,23 +62,6 @@
 </header>
 
 <%
-    UserDao userDao = new UserDao();
-    CourseDao courseDao = new CourseDao();
-    PrintWriter pw = new PrintWriter(response.getWriter());
-    Cookie[] cookies = request.getCookies();
-    Integer user_id = 0;
-    if(cookies != null){
-        for (Cookie cookie: cookies){
-            pw.println(cookie.getValue());
-            if (Objects.equals(cookie.getName(), "user_id")) {
-                user_id = Integer.valueOf(cookie.getValue());
-            };
-        }
-    }
-    ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
-
-    User user = userDao.getById(user_id);
-
     for (Course course: courses) { %>
         <div style="border: 1px solid black;">
             <div>
