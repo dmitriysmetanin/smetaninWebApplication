@@ -11,7 +11,7 @@
     <title>Создание курса</title>
 </head>
 <body>
-    <form method="post" action="<%= request.getContextPath()%>/author_panel/create_course">
+    <form method="post" action="<%= request.getContextPath()%>/author/create_course">
         <label for="input_name">Название</label>
         <input id="input_name" type="text" name="name" /><br/>
 
