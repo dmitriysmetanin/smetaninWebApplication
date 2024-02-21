@@ -71,8 +71,13 @@ public class IndexServlet extends HttpServlet {
                     throw new RuntimeException(e);
                 }
             } else if (request.getAttribute("userMode").equals("teacher")) {
-                ArrayList<Course> createdCourses = new ArrayList<>();
-                request.setAttribute("createdCourses", createdCourses);
+                try {
+                    User user = userDao.getById((Integer) request.getAttribute("user_id"));
+                    ArrayList<Course> createdCourses = user.getCreatedCourses();
+                    request.setAttribute("createdCourses", createdCourses);
+                } catch (ClassNotFoundException | SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/index.jsp");

@@ -23,14 +23,12 @@ public class ProfileServlet extends HttpServlet {
         if (editProfileInfoMode != null) {
             switch (editProfileInfoMode) {
                 case ("true"):
-                    // System.out.println(editProfileInfoMode);
                     Cookie cookie = new Cookie("editProfileInfoMode", "true");
                     cookie.setMaxAge(7 * 24 * 60 * 60);
                     response.addCookie(cookie);
                     response.sendRedirect("/profile");
                     break;
                 case ("false"):
-                    // System.out.println(editProfileInfoMode);
                     cookie = new Cookie("editProfileInfoMode", "false");
                     cookie.setMaxAge(7 * 24 * 60 * 60);
                     response.addCookie(cookie);
@@ -42,14 +40,12 @@ public class ProfileServlet extends HttpServlet {
         if (userModeToChange != null) {
             switch (userModeToChange) {
                 case ("student"):
-                    System.out.println("changing to student mode");
                     Cookie cookie1 = new Cookie("userMode", "student");
                     cookie1.setMaxAge(7 * 24 * 60 * 60);
                     response.addCookie(cookie1);
                     response.sendRedirect("/profile");
                     break;
                 case ("teacher"):
-                    System.out.println("changing to teachers mode");
                     Cookie cookie2 = new Cookie("userMode", "teacher");
                     cookie2.setMaxAge(7 * 24 * 60 * 60);
                     response.addCookie(cookie2);

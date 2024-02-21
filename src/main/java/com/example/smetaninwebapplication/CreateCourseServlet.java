@@ -37,7 +37,7 @@ public class CreateCourseServlet extends HttpServlet {
 
             try {
                 courseDao.create(course);
-                response.sendRedirect("/author/created_courses");
+                response.sendRedirect("/");
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (SQLException e) {
