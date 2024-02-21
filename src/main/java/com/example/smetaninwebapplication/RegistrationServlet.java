@@ -42,15 +42,18 @@ public class RegistrationServlet extends HttpServlet {
         Cookie cookie = null;
         try {
             cookie = new Cookie("user_id", Integer.toString(user.getId()));
+            cookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(cookie);
+
+            Cookie cookieAuthorMode = new Cookie("userMode", "student");
+            cookieAuthorMode.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(cookieAuthorMode);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        cookie.setMaxAge(7*24*60*60);
-        response.addCookie(cookie);
         response.sendRedirect("/");
-
     }
 
 }

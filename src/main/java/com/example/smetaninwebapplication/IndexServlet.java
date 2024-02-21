@@ -15,12 +15,6 @@ import jakarta.servlet.annotation.*;
 
 @WebServlet("/")
 public class IndexServlet extends HttpServlet {
-    private String message;
-
-    public void init() {
-
-    }
-
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Integer courseToAddId = Integer.valueOf(request.getParameter("courseToAddId"));
         CourseDao courseDao = new CourseDao();
@@ -76,8 +70,5 @@ public class IndexServlet extends HttpServlet {
             RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pages/index.jsp");
             requestDispatcher.forward(request, response);
         }
-    }
-
-    public void destroy() {
     }
 }

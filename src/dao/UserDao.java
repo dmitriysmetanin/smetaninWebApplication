@@ -7,6 +7,28 @@ import java.sql.*;
 import java.util.Properties;
 
 public class UserDao {
+    public boolean exists(int id) throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        String SELECT_COURSE = String.format("select count(*) from users where id = %s", id);
+        String url = "jdbc:postgresql://localhost:5432/smetaninWebApplicationDatabase";
+        Properties props = new Properties();
+        props.setProperty("user", "postgres");
+        props.setProperty("password", "root");
+        props.setProperty("ssl", "false");
+
+        try (Connection conn = DriverManager.getConnection(url, props);
+             PreparedStatement preparedStatement = conn.prepareStatement(SELECT_COURSE,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            ResultSet result = preparedStatement.executeQuery();
+            result.first();
+            int count = result.getInt("count");
+            if (count == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 
     public User getById(Integer id) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
@@ -26,9 +48,15 @@ public class UserDao {
             user.setName(rs.getString("name"));
             user.setEmail(rs.getString("email"));
             user.setPass(rs.getString("pass"));
+            user.setPhone(rs.getString("phone"));
+            user.setAbout(rs.getString("about"));
 
             return user;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+
+        return null;
     }
 
     public Integer subscribe(Course course, User user) throws ClassNotFoundException {
