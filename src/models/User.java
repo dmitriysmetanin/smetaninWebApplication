@@ -9,12 +9,31 @@ public class User {
     private String name;
     private String email;
     private String pass;
+
+    private String phone;
+    private String about;
     public int getId() throws ClassNotFoundException, SQLException {
         UserDao userDao = new UserDao();
         if (userDao.login(this) == 1){
             return userDao.getId(this);
         }
         return 0;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     public ArrayList<Course> getSubscribedCourses() throws ClassNotFoundException, SQLException {
