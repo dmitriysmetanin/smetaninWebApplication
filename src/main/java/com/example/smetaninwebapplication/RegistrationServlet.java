@@ -41,6 +41,10 @@ public class RegistrationServlet extends HttpServlet {
 
         Cookie cookie = null;
         try {
+            Cookie editProfileInfoCookie = new Cookie("editProfileInfoMode", "false");
+            editProfileInfoCookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(editProfileInfoCookie);
+
             cookie = new Cookie("user_id", Integer.toString(user.getId()));
             cookie.setMaxAge(7 * 24 * 60 * 60);
             response.addCookie(cookie);

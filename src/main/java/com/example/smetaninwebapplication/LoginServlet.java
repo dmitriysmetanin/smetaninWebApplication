@@ -33,11 +33,15 @@ public class LoginServlet extends HttpServlet {
 
         try {
             if (user.login() == 1){
-                int user_id = user.getId();
+                Cookie editProfileInfoCookie = new Cookie("editProfileInfoMode", "false");
+                editProfileInfoCookie.setMaxAge(7 * 24 * 60 * 60);
+                response.addCookie(editProfileInfoCookie);
+
                 Cookie cookieAuthorMode = new Cookie("userMode", "student");
                 cookieAuthorMode.setMaxAge(7 * 24 * 60 * 60);
                 response.addCookie(cookieAuthorMode);
 
+                int user_id = user.getId();
                 Cookie cookie = new Cookie("user_id",String.valueOf(user_id));
                 cookie.setMaxAge(7*24*60*60);
                 response.addCookie(cookie);

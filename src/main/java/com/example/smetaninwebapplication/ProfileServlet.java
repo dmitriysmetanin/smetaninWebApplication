@@ -22,9 +22,27 @@ public class ProfileServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String editUserInfo = request.getParameter("editUserInfo");
+        String editProfileInfoMode = (String) request.getParameter("editProfileInfoMode");
         String userModeToChange = (String) request.getParameter("userModeToChange");
 
+        if (editProfileInfoMode != null){
+            switch (editProfileInfoMode){
+                case ("true"):
+                    System.out.println(editProfileInfoMode);
+                    Cookie cookie = new Cookie("editProfileInfoMode","true");
+                    cookie.setMaxAge(7*24*60*60);
+                    response.addCookie(cookie);
+                    response.sendRedirect("/profile");
+                    break;
+                case ("false"):
+                    System.out.println(editProfileInfoMode);
+                    cookie = new Cookie("editProfileInfoMode","false");
+                    cookie.setMaxAge(7*24*60*60);
+                    response.addCookie(cookie);
+                    response.sendRedirect("/profile");
+                    break;
+            }
+        }
 
         if (userModeToChange != null){
             switch (userModeToChange) {
@@ -52,6 +70,7 @@ public class ProfileServlet extends HttpServlet {
 
         Integer user_id = 0;
         String userMode = "";
+        String editProfileInfoMode = "";
         for (Cookie cookie : cookies) {
             if (cookie != null) {
                 if (cookie.getName().equals("user_id")) {
@@ -60,6 +79,9 @@ public class ProfileServlet extends HttpServlet {
                 } else if (cookie.getName().equals("userMode")) {
                     userMode = cookie.getValue();
                     request.setAttribute("userMode", userMode);
+                } else if (cookie.getName().equals("editProfileInfoMode")) {
+                    editProfileInfoMode = cookie.getValue();
+                    request.setAttribute("editProfileInfoMode", editProfileInfoMode);
                 }
             }
         }
